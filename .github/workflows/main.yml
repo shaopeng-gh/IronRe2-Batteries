@@ -21,34 +21,14 @@ on:
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:
-  
+
 jobs:
-  - job: Linux
-    pool:
-      vmImage: 'ubuntu-16.04'
+  analyze:
+    name: Azure Pipelines Action
+    runs-on: windows-2019
     steps:
-    - script: git submodule update --init
-    - script: ./build.sh
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: bin/artifacts/
-
-  - job: macOS
-    pool:
-      vmImage: 'macOS-10.13'
-    steps:
-    - script: git submodule update --init
-    - script: ./build.sh
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: bin/artifacts/
-
-  - job: Windows
-    pool:
-      vmImage: 'vs2017-win2016'
-    steps:
-    - script: git submodule update --init
-    - script: .\ci_build.bat
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: bin/artifacts/
+    - name: Checkout repository
+      uses: Azure/pipelines@v1.2
+      with:
+        # Name of the Azure Pipline to be triggered
+        azure-pipeline-name:  .azure-pipelines.yml
